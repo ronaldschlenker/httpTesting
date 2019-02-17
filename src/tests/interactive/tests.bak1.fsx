@@ -1,5 +1,4 @@
 //#region init
-#r @"System.Xml.Linq"
 #r @".\packages\xunit.assert\lib\netstandard1.1\xunit.assert.dll"
 #r @".\packages\FSharp.Data\lib\netstandard2.0\FSharp.Data.dll"
 #load  @".\packages\SchlenkR.FsHttp\lib\netstandard2.0\FsHttp.fsx"
