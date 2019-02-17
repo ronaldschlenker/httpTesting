@@ -54,6 +54,7 @@ let app =
                     >> OK
                 )
                 >=> writeJson
+            // now: Extend our API with basic filters
             // path "/persons" >=> request (
             //     fun r ->
             //         let filter = r |> query "filter"
