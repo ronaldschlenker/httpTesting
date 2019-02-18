@@ -18,18 +18,18 @@ let ``Persons can be retrieved`` () =
     |> Assert.True
 
 
-[<Fact>]
-let ``Persons are ordered`` () =
-    let names =
-        http {
-            GET "http://localhost:8080/persons"
-        }
-        |> (toJson >> JsonExtensions.AsArray)
-        |> Array.map (fun x -> x?name.AsString())
-    let orderedNames = names |> Array.sort
+// [<Fact>]
+// let ``Persons are ordered`` () =
+//     let names =
+//         http {
+//             GET "http://localhost:8080/persons"
+//         }
+//         |> (toJson >> JsonExtensions.AsArray)
+//         |> Array.map (fun x -> x?name.AsString())
+//     let orderedNames = names |> Array.sort
 
-    Seq.zip names orderedNames
-    |> Seq.map (fun (a,b) -> a = b)
-    |> Seq.forall (fun x -> x = true)
-    |> Assert.True
+//     Seq.zip names orderedNames
+//     |> Seq.map (fun (a,b) -> a = b)
+//     |> Seq.forall (fun x -> x = true)
+//     |> Assert.True
     

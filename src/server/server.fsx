@@ -41,50 +41,63 @@ module Helper =
 
 type Person = { name:string; age:int }
 
-let mutable persons = [
-    { name = "Steffi"; age = 25 }
-    { name = "Hans"; age = 45 }
-    { name = "Gabi"; age = 43 }
-    { name = "Jonas"; age = 32 }
-]
+module Database =
+    let mutable persons = [
+        { name = "Steffi"; age = 25 }
+        { name = "Hans"; age = 45 }
+        { name = "Gabi"; age = 43 }
+        { name = "Jonas"; age = 32 }
+    ]
 
 let app =
     choose [
         GET >=> choose [
-            path "/info" >=> OK "Hello world server v0.1"
+            path "/info" >=> OK "All-My-Friends server v0.1"
             path "/persons"
                 >=> request (
-                    fun r -> persons |> List.sortBy (fun p -> p.name) |> toJson
+                    fun r ->
+                        Database.persons 
+                        // |> List.sortBy (fun p -> p.name)
+                        |> toJson
                     >> OK
                 )
                 >=> writeJson
-            // now: Extend our API with basic filters
-            // path "/persons" >=> request (
-            //     fun r ->
-            //         let filter = r |> query "filter"
-            //         let propName,value = (String.split ',' filter) |> (fun x -> x.[0],x.[1])
-
-            //         let prop =
-            //             typeof<Person>.GetProperties()
-            //             |> Seq.filter (fun p -> p.Name = propName)
-            //             |> Seq.exactlyOne
-
-            //         persons
-            //         |> Seq.map (fun p -> prop.GetValue p)
-            //         |> Seq.map (fun p -> string p)
-            //         |> Seq.filter (fun v -> v = value)
-            //         |> toJson
-            //     >> OK
-            // )
         ]
-        PUT >=> choose [
-            path "/persons" 
-            >=> request (fun r ->
-                let person = getJson<Person> r
-                persons <- persons @ [person]
-                OK ""
-            )
-        ]
+        // PUT >=> choose [
+        //     path "/persons" 
+        //     >=> request (fun r ->
+        //         let person = getJson<Person> r
+        //         Database.persons <- Database.persons @ [person]
+        //         OK ""
+        //     )
+        // ]
     ]
 
 let stopServer = startServer app
+
+
+
+
+
+
+
+
+
+// now: Extend our API with basic filters
+// path "/persons" >=> request (
+//     fun r ->
+//         let filter = r |> query "filter"
+//         let propName,value = (String.split ',' filter) |> (fun x -> x.[0],x.[1])
+
+//         let prop =
+//             typeof<Person>.GetProperties()
+//             |> Seq.filter (fun p -> p.Name = propName)
+//             |> Seq.exactlyOne
+
+//         persons
+//         |> Seq.map (fun p -> prop.GetValue p)
+//         |> Seq.map (fun p -> string p)
+//         |> Seq.filter (fun v -> v = value)
+//         |> toJson
+//     >> OK
+// )

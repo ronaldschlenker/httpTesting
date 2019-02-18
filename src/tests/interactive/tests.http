@@ -2,9 +2,6 @@
 GET http://localhost:8080/persons
 
 
-GET http://localhost:8080/persons
-
-
 PUT http://localhost:8080/persons
 content-type: application/json
 
