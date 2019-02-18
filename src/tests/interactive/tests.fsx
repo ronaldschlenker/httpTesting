@@ -15,6 +15,22 @@ open Xunit
 http {
     GET "http://localhost:8080/persons"
 }
+
+http {
+    PUT "http://localhost:8080/persons"
+    body
+    json """
+    { 
+        "name": "Axel",
+        "age": 50 
+    }
+    """
+}
+
+
+http {
+    GET "http://localhost:8080/persons"
+}
 |> toJson
 |> JsonExtensions.AsArray
 |> fun arr -> arr.Length > 2

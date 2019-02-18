@@ -22,6 +22,10 @@ module Helper =
     let form key (r: HttpRequest) = defaultArg (Option.ofChoice (r.form ^^ key)) keyNotFoundString
     let toJson (o:obj) = o |> JsonConvert.SerializeObject
     let writeJson = Writers.setMimeType "application/json; charset=utf-8"
+    let fromJson<'a> json = JsonConvert.DeserializeObject(json, typeof<'a>) :?> 'a
+    let getJson<'a> (req : HttpRequest) =
+      let getString rawForm = System.Text.Encoding.UTF8.GetString(rawForm)
+      req.rawForm |> getString |> fromJson<'a>
 
     let startServer app =
         let cts = new CancellationTokenSource()
@@ -37,7 +41,7 @@ module Helper =
 
 type Person = { name:string; age:int }
 
-let persons = [
+let mutable persons = [
     { name = "Steffi"; age = 25 }
     { name = "Hans"; age = 45 }
     { name = "Gabi"; age = 43 }
@@ -72,6 +76,14 @@ let app =
             //         |> toJson
             //     >> OK
             // )
+        ]
+        PUT >=> choose [
+            path "/persons" 
+            >=> request (fun r ->
+                let person = getJson<Person> r
+                persons <- persons @ [person]
+                OK ""
+            )
         ]
     ]
 
